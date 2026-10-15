@@ -22,11 +22,10 @@ export const usersUpdateGet = (req, res) => {
   });
 };
 
-//export const usersCreatePost = (req, res) => {
-//  const { firstName, lastName } = req.body;
-//  usersStorage.addUser({ firstName, lastName });
-//  res.redirect("/");
-//};
+export const usersDeletePost = (req, res) => {
+  usersStorage.deleteUser(req.params.id);
+  res.redirect("/");
+};
 
 
 // validation error messages
