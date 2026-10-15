@@ -14,6 +14,14 @@ export const usersCreateGet = (req, res) => {
   });
 };
 
+export const usersUpdateGet = (req, res) => {
+  const user = usersStorage.getUser(req.params.id);
+  res.render("updateUser", {
+    title: "Update user",
+    user: user,
+  });
+};
+
 //export const usersCreatePost = (req, res) => {
 //  const { firstName, lastName } = req.body;
 //  usersStorage.addUser({ firstName, lastName });
@@ -48,6 +56,24 @@ export const usersCreatePost = [
     }
     const { firstName, lastName } = matchedData(req);
     usersStorage.addUser({ firstName, lastName });
+    res.redirect("/");
+  }
+];
+
+export const usersUpdatePost = [
+  validateUser,
+  (req, res) => {
+    const user = usersStorage.getUser(req.params.id);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).render("updateUser", {
+        title: "Update user",
+        user: user,
+        errors: errors.array(),
+      });
+    }
+    const { firstName, lastName } = matchedData(req);
+    usersStorage.updateUser(req.params.id, { firstName, lastName });
     res.redirect("/");
   }
 ];
