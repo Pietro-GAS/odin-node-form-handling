@@ -32,6 +32,7 @@ export const usersDeletePost = (req, res) => {
 const alphaErr = "must only contain letters.";
 const lengthErr = "must be between 1 and 10 characters.";
 const emailErr = "must be a valid email address"
+const ageErr = "must be a number between 18 and 120"
 
 // input validation methods
 const validateUser = [
@@ -43,6 +44,9 @@ const validateUser = [
     .isLength({ min: 1, max: 10 }).withMessage(`Last name ${lengthErr}`),
   body("email").trim()
     .isEmail().withMessage(`Email ${emailErr}`),
+  body("age").trim()
+    .optional({ values: "falsy" })
+    .isInt({ min: 18, max: 120}).withMessage(`Age ${ageErr}`),
 ];
 
 // We can pass an entire array of middleware validations to our controller.
@@ -56,8 +60,8 @@ export const usersCreatePost = [
         errors: errors.array(),
       });
     }
-    const { firstName, lastName, email } = matchedData(req);
-    usersStorage.addUser({ firstName, lastName, email });
+    const { firstName, lastName, email, age } = matchedData(req);
+    usersStorage.addUser({ firstName, lastName, email, age });
     res.redirect("/");
   }
 ];
@@ -74,8 +78,8 @@ export const usersUpdatePost = [
         errors: errors.array(),
       });
     }
-    const { firstName, lastName } = matchedData(req);
-    usersStorage.updateUser(req.params.id, { firstName, lastName });
+    const { firstName, lastName, email, age } = matchedData(req);
+    usersStorage.updateUser(req.params.id, { firstName, lastName, email, age });
     res.redirect("/");
   }
 ];
